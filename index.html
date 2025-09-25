@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DB GENERAL CONSTRUCTION PLC</title>
+  <meta name="description" content="DB General Construction PLC provides reliable and innovative construction solutions in Addis Ababa.">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:"Inter",sans-serif;}
+    body{background: linear-gradient(135deg,#e0f7ff,#d4f1ff,#e6f5ff); color:#111; line-height:1.6;}
+    a{text-decoration:none;}
+    /* Loader */
+    #loader{position:fixed;top:0;left:0;width:100%;height:100%; background:#fff;display:flex;justify-content:center;align-items:center;z-index:9999;}
+    #loader i{font-size:4rem;color:#007bff;animation:spin 2s linear infinite;}
+    @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+    /* Navbar */
+    nav{display:flex;justify-content:space-between;align-items:center;padding:1rem 2rem;position:sticky;top:0;background:#ffffffcc;backdrop-filter:blur(5px);box-shadow:0 2px 6px rgba(0,0,0,0.1);z-index:10;}
+    nav .logo{font-size:1.4rem;font-weight:800;color:#2d3e50;}
+    nav ul{list-style:none;display:flex;gap:1.5rem;}
+    nav ul li a{color:#2d3e50;font-weight:600;transition:0.3s;}
+    nav ul li a:hover{color:#007bff;}
+    /* Hero */
+    header{text-align:center;padding:6rem 2rem; background: linear-gradient(135deg,#6a11cb,#2575fc,#6dd5ed); color:white; position:relative; overflow:hidden;}
+    header h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;transition:transform 0.1s;}
+    header p{margin-top:1rem;max-width:600px;margin-left:auto;margin-right:auto;opacity:0.9;transition:transform 0.1s;}
+    header .btn{display:inline-block;margin-top:2rem;padding:1rem 2rem;background:#fff;color:#2575fc;font-weight:700;border-radius:30px;transition:transform 0.3s,background 0.3s;}
+    header .btn:hover{transform:translateY(-5px);background:#f1f1f1;}
+    /* Floating icons */
+    .floating-icons{position:absolute;top:20%;left:50%;transform:translateX(-50%); display:flex;gap:2rem;font-size:2.5rem;color:#ffd700;opacity:0.8;}
+    .floating-icons i{animation:float 3s ease-in-out infinite;}
+    .floating-icons i:nth-child(2){animation-delay:0.5s;}
+    .floating-icons i:nth-child(3){animation-delay:1s;}
+    @keyframes float{0%{transform:translateY(0);}50%{transform:translateY(-15px);}100%{transform:translateY(0);}}
+    /* Sections */
+    section{padding:4rem 2rem;max-width:1200px;margin:auto; background: linear-gradient(135deg,#f6f9ff,#e0f7ff,#d4f1ff); border-radius:15px;margin-bottom:2rem;box-shadow:0 4px 15px rgba(0,0,0,0.05);}
+    section h2{font-size:2rem;margin-bottom:2rem;font-weight:700;color:#2d3e50;text-align:center;}
+    /* About */
+    .about{display:flex;flex-wrap:wrap;align-items:center;gap:2rem;justify-content:center;}
+    .about img{width:100%;max-width:500px;border-radius:15px;box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+    .about .text{max-width:500px;}
+    /* Services */
+    .card-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;}
+    .card{background: linear-gradient(135deg,#ffffffcc,#e0f0ffcc); padding:2rem;border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.05);transition:0.3s;}
+    .card:hover{transform:translateY(-10px);box-shadow:0 8px 20px rgba(0,0,0,0.1);}
+    .card h3{margin-bottom:1rem;color:#2575fc;display:flex;align-items:center;gap:0.5rem;}
+    .card p{font-size:0.95rem;color:#555;}
+    .card a.btn{margin-top:1rem;display:inline-block;}
+    /* Portfolio */
+    .portfolio{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2rem;}
+    .portfolio img{width:100%;border-radius:15px;transition:0.3s;}
+    .portfolio img:hover{transform:scale(1.05);}
+    /* Testimonials */
+    .testimonials .card{text-align:center;background: linear-gradient(135deg,#ffffffcc,#d0e4ffcc);padding:2rem;border-radius:15px;margin-bottom:2rem;}
+    .testimonials .card p{font-style:italic;color:#555;}
+    .testimonials .card h4{margin-top:1rem;color:#2575fc;font-weight:600;}
+    /* Contact */
+    .contact{background: linear-gradient(135deg,#6dd5ed,#2193b0,#6a11cb); text-align:center;border-radius:15px;padding:4rem 2rem;margin-bottom:2rem;}
+    form{max-width:600px;margin:auto;display:flex;flex-direction:column;gap:1.2rem;}
+    input,textarea{padding:1rem;border:1px solid #ccc;border-radius:10px;font-size:1rem;width:100%;resize:none;}
+    button{padding:1rem;background:#2575fc;color:#fff;border:none;border-radius:30px;font-weight:700;font-size:1rem;cursor:pointer;transition:0.3s;}
+    button:hover{background:#1a4fb7;transform:translateY(-3px);}
+    .thank-you{display:none;color:lightgreen;font-weight:600;margin-top:1rem;}
+    .contact-info{margin-bottom:2rem;font-size:1.1rem;color:#fff;text-align:center;}
+    .contact-info p{margin:0.7rem 0;}
+    .contact-info i{color:#ffd700;margin-right:8px;}
+    .contact-info a{color:#fff;font-weight:600;text-decoration:none;}
+    .contact-info a:hover{text-decoration:underline;}
+    .social-links{margin:1.5rem 0;text-align:center;}
+    .social-links a{font-size:1.8rem;color:#ffd700;margin:0 10px;transition:0.3s;}
+    .social-links a:hover{color:#fff;}
+    footer{background: linear-gradient(135deg,#2575fc,#6a11cb,#6dd5ed);color:#fff;text-align:center;padding:1.5rem;margin-top:3rem;border-radius:10px;}
+    footer p{font-size:0.9rem;}
+    footer p.credit{font-size:0.85rem;color:#ccc;margin-top:0.5rem;}
+    html{scroll-behavior:smooth;}
+
+    /* Anniversary Ribbon */
+    .ribbon {
+      background: linear-gradient(135deg, #ffcc00, #ff9900);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: center;
+      padding: 10px 15px;
+      border-radius: 30px;
+      margin: 1rem auto;
+      width: fit-content;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 5px #ff9900; }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px #ffcc00; }
+      100% { transform: scale(1); box-shadow: 0 0 5px #ff9900; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader"><i class="fas fa-crane"></i></div>
+
+<!-- Navbar -->
+<nav>
+  <div class="logo">DB GENERAL CONSTRUCTION PLC</div>
+  <ul>
+    <li><a href="#about">About us</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#style">Projects</a></li>
+    <li><a href="#projects">Recent Projects</a></li>
+    <li><a href="#safety">Safety</a></li>
+    <li><a href="#investors">Investors</a></li>
+    <li><a href="#careers">Careers</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<header>
+  <h1>Building the Future, Restoring the Past</h1>
+  <p>Reliable construction solutions with innovation, safety, and sustainability at the core.</p>
+  <p>Furmaata ijaarsa amanamaa kan haala haaraa, nageenya, fi naannoo eeguu irratti xiyyeeffate.</p>
+  <p>አስፈጻሚ ልማት ፣ ደህንነት እና ተስማሚነት በመሰረት.</p>
+  <a href="#services" class="btn">Our Services</a>
+  <a href="#contact" class="btn">Request a Quote</a>
+  <div class="floating-icons">
+    <i class="fas fa-hammer"></i>
+    <i class="fas fa-wrench"></i>
+    <i class="fas fa-hard-hat"></i>
+  </div>
+</header>
+
+<!-- About -->
+<section class="about" id="about">
+  <div class="text">
+    <h2>About Us</h2>
+    <p>DB GENERAL CONSTRUCTION PLC is a trusted construction company delivering innovative, sustainable, and high-quality building solutions. We combine modern technology with experienced craftsmanship to bring every project to life.</p>
+  </div>
+  <img src="images/Construction Team.jpg" alt="Construction Team" loading="lazy">
+</section>
+
+<!-- Services -->
+<section class="services" id="services">
+  <h2>Our Core Services</h2>
+  <div class="card-container">
+    <div class="card">
+      <h3><i class="fas fa-building"></i> Building Construction</h3>
+      <p>Residential, commercial, and industrial projects with durability and design in focus.</p>
+      <a href="#contact" class="btn">Request a Quote</a>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-road"></i> Infrastructure</h3>
+      <p>Roads, bridges, and public infrastructure projects connecting communities.</p>
+      <a href="#contact" class="btn">Request a Quote</a>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-tools"></i> Renovation</h3>
+      <p>Restoring and upgrading existing structures with modern solutions.</p>
+      <a href="#contact" class="btn">Request a Quote</a>
+    </div>
+  </div>
+</section>
+
+<!-- Portfolio / Style -->
+<section class="portfolio" id="style">
+  <h2>Our Style / Projects</h2>
+  <div class="portfolio">
+    <img src="images/project1.jpg" alt="Project 1" loading="lazy">
+    <img src="images/project2.jpg" alt="Project 2" loading="lazy">
+    <img src="images/project3.jpg" alt="Project 3" loading="lazy">
+    <img src="images/project4.jpg" alt="Project 4" loading="lazy">
+    <img src="images/project15.jpg" alt="project15" loading="lazy">
+    <img src="images/project16.jpg" alt="project16" loading="lazy">
+    <img src="images/project17.jpg" alt="Project17" loading="lazy">
+    <img src="images/project18.jpg" alt="Project18" loading="lazy">
+    <img src="images/project19.jpg" alt="project19" loading="lazy">
+    <img src="images/project20.jpg" alt="project20" loading="lazy">
+  </div>
+</section>
+
+<!-- Recent Projects -->
+<section class="portfolio" id="projects">
+  <h2>Our Recent Projects</h2>
+  <div class="portfolio">
+    <img src="images/project5.jpg" alt="Project 5" loading="lazy">
+    <img src="images/project6.jpg" alt="Project 6" loading="lazy">
+    <img src="images/project7.jpg" alt="Project 7" loading="lazy">
+    <img src="images/project8.jpg" alt="Project 8" loading="lazy">
+  </div>
+</section>
+
+<!-- Safety & Quality -->
+<section id="safety">
+  <h2>Safety & Quality</h2>
+  <div class="card-container">
+    <div class="card">
+      <h3><i class="fas fa-shield-alt"></i> Safety First</h3>
+      <p>We maintain the highest safety standards across all projects to ensure a secure work environment.</p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-certificate"></i> Certified Quality</h3>
+      <p>All works comply with ISO 9001 and local construction regulations, ensuring top-notch quality.</p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-leaf"></i> Environmental Care</h3>
+      <p>Our construction practices prioritize sustainability and eco-friendly solutions for every project.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Investors / Shareholders -->
+<section id="investors">
+  <h2>Investors & Shareholders</h2>
+  <p>Access our corporate governance, annual reports, and latest press releases.</p>
+  <div class="card-container">
+    <div class="card">
+      <h3><i class="fas fa-file-pdf"></i> Annual Reports</h3>
+      <p>Download our latest financial and performance reports.</p>
+      <a href="docs/annual-report-2025.pdf" target="_blank" class="btn">View Report</a>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-chart-line"></i> Stock Information</h3>
+      <p>Track our share price and performance trends.</p>
+      <a href="#" class="btn">View Stock Info</a>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-newspaper"></i> Press Releases</h3>
+      <p>Stay updated with our company news and official announcements.</p>
+
+      <!-- Anniversary Ribbon -->
+      <div class="ribbon">🎉 Celebrating 12 Years of Excellence 🎉</div>
+
+      <a href="#" class="btn">Read News</a>
+    </div>
+  </div>
+</section>
+
+<!-- Careers / Recruitment -->
+<section id="careers">
+  <h2>Careers & Recruitment</h2>
+  <p>Join DB General Construction PLC and build your career with us.</p>
+  <div class="card-container">
+    <div class="card">
+      <h3><i class="fas fa-briefcase"></i> Current Openings</h3>
+      <p>Explore our latest job vacancies across various departments.</p>
+      <a href="careers.html" class="btn">View Jobs</a>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-user-check"></i> Why Work With Us</h3>
+      <p>Experience a professional work culture with opportunities for growth and learning.</p>
+    </div>
+    <div class="card">
+      <h3><i class="fas fa-file-alt"></i> Apply Now</h3>
+      <p>Send us your resume and cover letter to join our growing team.</p>
+      <a href="mailto:hr@dbgcplc.com" class="btn">Apply via Email</a>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials" id="testimonials">
+  <h2>What Our Clients Say</h2>
+  <div class="card-container">
+    <div class="card">
+      <p>"DB Construction exceeded expectations with quality and speed!"</p>
+      <h4>- Client Name</h4>
+    </div>
+    <div class="card">
+      <p>"Professional, reliable, and always on time. Highly recommend!"</p>
+      <h4>- Another Client</h4>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <h2>Get in Touch</h2>
+  <div class="contact-info">
+    <p><i class="fas fa-user-tie"></i> <strong>General Manager:</strong> Eng. Dale Melaku</p>
+    <p><i class="fas fa-phone"></i> <strong>Phone:</strong> <a href="tel:0911500876">0911500876</a></p>
+    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <a href="mailto:info@dbgcplc.com">info@dbgcplc.com</a></p>
+    <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> Addis Ababa, Ethiopia</p>
+  </div>
+  <form id="contactForm">
+    <input type="text" placeholder="Your Name" required>
+    <input type="email" placeholder="Your Email" required>
+    <textarea placeholder="Your Message" rows="5" required></textarea>
+    <button type="submit">Send Message</button>
+    <div class="thank-you">Thank you for contacting us!</div>
+  </form>
+  <div class="social-links">
+    <a href="https://www.tiktok.com/@db.gc.plc?_t=ZM-900rtL62dUy&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+    <a href="#"><i class="fab fa-facebook-f"></i></a>
+    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <a href="#"><i class="fab fa-twitter"></i></a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© 2025 DB General Construction PLC. All rights reserved.</p>
+  <p class="credit">Designed with ❤️ by Hambisa Adamu</p>
+</footer>
+
+<script>
+  // Loader hide after page load
+  window.addEventListener("load", () => {
+    document.getElementById("loader").style.display = "none";
+  });
+
+  // Simple contact form handling
+  const form = document.getElementById("contactForm");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    form.reset();
+    document.querySelector(".thank-you").style.display = "block";
+    setTimeout(() => { document.querySelector(".thank-you").style.display = "none"; }, 4000);
+  });
+</script>
+
+</body>
+</html>
